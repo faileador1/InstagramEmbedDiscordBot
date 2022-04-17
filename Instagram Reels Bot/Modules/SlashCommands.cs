@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Discord;
@@ -26,8 +26,8 @@ namespace Instagram_Reels_Bot.Modules
 			_subscriptions = subs;
 		}
 
-		[SlashCommand("link","Procesa enlace de Instagram.", runMode: RunMode.Async)]
-		public async Task Link(string url, [Summary(description: "Número de orden en el carrusel del post.")][MinValue(1)] int index = 1)
+		[SlashCommand("link","Processes an Instagram link.", runMode: RunMode.Async)]
+		public async Task Link(string url, [Summary(description: "The post number for the desired post in a carousel.")][MinValue(1)] int index = 1)
         {
 			// Check whitelist:
 			if (!Whitelist.IsServerOnList(((Context.Guild == null) ? (0) : (Context.Guild.Id))))
@@ -73,7 +73,7 @@ namespace Instagram_Reels_Bot.Modules
 					//Response with stream:
 					using (Stream stream = new MemoryStream(response.stream))
 					{
-						FileAttachment attachment = new FileAttachment(stream, "IGMedia.mp4", "Vídeo de Instagram.");
+						FileAttachment attachment = new FileAttachment(stream, "IGMedia.mp4", "An Instagram Video.");
 
 						await Context.Interaction.FollowupWithFileAsync(attachment, embed: embed.AutoSelector(), components: component.AutoSelector());
 					}
@@ -91,7 +91,7 @@ namespace Instagram_Reels_Bot.Modules
 				{
 					using (Stream stream = new MemoryStream(response.stream))
 					{
-						FileAttachment attachment = new FileAttachment(stream, "IGMedia.jpg", "Imagen de Instagram.");
+						FileAttachment attachment = new FileAttachment(stream, "IGMedia.jpg", "An Instagram Image.");
 						await Context.Interaction.FollowupWithFileAsync(attachment, embed: embed.AutoSelector(), allowedMentions: AllowedMentions.None, components: component.AutoSelector());
 					}
 				}
@@ -102,8 +102,8 @@ namespace Instagram_Reels_Bot.Modules
 			}
 			
 		}
-		[SlashCommand("profile", "Obtener información de un perfil de Instagram.", runMode: RunMode.Async)]
-		public async Task Profile([Summary("username", "Nombre de usuario de la cuenta de Instagram.")] string username)
+		[SlashCommand("profile", "Gets information about an Instagram profile.", runMode: RunMode.Async)]
+		public async Task Profile([Summary("username", "The username of the Instagram account.")] string username)
         {
 			// Check whitelist:
 			if (!Whitelist.IsServerOnList(((Context.Guild == null) ? (0) : (Context.Guild.Id))))
@@ -143,7 +143,7 @@ namespace Instagram_Reels_Bot.Modules
 			// If not a profile for some reason, treat otherwise:
 			if (!response.onlyAccountData)
 			{
-				await FollowupAsync("No parece ser un perfil de usuario. Prueba usando `/link` para los posts.");
+				await FollowupAsync("This doesnt appear to be a profile. Try using `/link` for posts.");
 				return;
 			}
 
@@ -152,7 +152,7 @@ namespace Instagram_Reels_Bot.Modules
 
 			await FollowupAsync(embed: embed.AutoSelector(), allowedMentions: AllowedMentions.None, components: component.AutoSelector());
 		}
-		[SlashCommand("help", "Para ayuda con el bot.", runMode: RunMode.Async)]
+		[SlashCommand("help", "For help with the bot.", runMode: RunMode.Async)]
 		public async Task Help()
 		{
 			// Check whitelist:
@@ -210,32 +210,28 @@ namespace Instagram_Reels_Bot.Modules
 		[SlashCommand("github", "Visit our github page", runMode: RunMode.Async)]
 		public async Task Github()
 		{
-			// Only on official bot:
-			if (Context.Client.CurrentUser.Id == 815695225678463017)
-			{
-				//response embed:
-				var embed = new Discord.EmbedBuilder();
-				embed.Title = "GitHub";
-				embed.Url = "https://github.com/bman46/InstagramEmbedDiscordBot";
-				embed.Description = "View the source code, download code to host your own version, contribute to the bot, and file issues for improvements or bugs. [Github](https://github.com/bman46/InstagramEmbedDiscordBot)";
-				embed.WithColor(new Color(131, 58, 180));
+			//response embed:
+			var embed = new Discord.EmbedBuilder();
+			embed.Title = "GitHub";
+			embed.Url = "https://github.com/bman46/InstagramEmbedDiscordBot";
+			embed.Description = "View the source code, download code to host your own version, contribute to the bot, and file issues for improvements or bugs. [Github](https://github.com/bman46/InstagramEmbedDiscordBot)";
+			embed.WithColor(new Color(131, 58, 180));
 
-				ButtonBuilder buttonGithub = new ButtonBuilder();
-				buttonGithub.Label = "GitHub";
-				buttonGithub.Style = ButtonStyle.Link;
-				buttonGithub.Url = "https://github.com/bman46/InstagramEmbedDiscordBot";
-				ComponentBuilder component = new ComponentBuilder().WithButton(buttonGithub);
-			}
+			ButtonBuilder buttonGithub = new ButtonBuilder();
+			buttonGithub.Label = "GitHub";
+			buttonGithub.Style = ButtonStyle.Link;
+			buttonGithub.Url = "https://github.com/bman46/InstagramEmbedDiscordBot";
+			ComponentBuilder component = new ComponentBuilder().WithButton(buttonGithub);
 
 			await RespondAsync(embed: embed.Build(), ephemeral: true, components: component.Build());
 		}
-		[SlashCommand("suscribirse", "Obtener actualizaciones cuando el usuario suba un post nuevo.", runMode: RunMode.Async)]
+		[SlashCommand("subscribe", "Get updates when a user posts a new post on Instagram.", runMode: RunMode.Async)]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		[RequireBotPermission(ChannelPermission.AttachFiles)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
 		[RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
 		[RequireContext(ContextType.Guild)]
-		public async Task Subscribe([Summary("username", "Nombre de usuario de la cuenta de Instagram a seguir.")]string username)
+		public async Task Subscribe([Summary("username", "The username of the Instagram user.")]string username)
 		{
 			// Check whitelist:
 			if (!Whitelist.IsServerOnList(((Context.Guild == null) ? (0) : (Context.Guild.Id))))
@@ -255,7 +251,7 @@ namespace Instagram_Reels_Bot.Modules
 			//Ensure subscriptions are enabled:
 			if (!_subscriptions.ModuleEnabled)
 			{
-				await RespondAsync("Las suscripciones están deshabilitadas.", ephemeral: true);
+				await RespondAsync("Subscriptions module is currently disabled.", ephemeral: true);
 				return;
 			}
 
@@ -270,7 +266,7 @@ namespace Instagram_Reels_Bot.Modules
 			int maxcount = await _subscriptions.MaxSubscriptionsCountForGuildAsync(Context.Guild.Id);
 			if (subcount >= maxcount)
             {
-				await FollowupAsync("Ya estás suscrito a "+ subcount +" cuenta de Instagram, tu límite está en "+maxcount+" cuentas. Usa `/desuscribirse` para eliminar algunas cuentas.");
+				await FollowupAsync("You are already subscribed to "+ subcount +" Instagram accounts which is greater than or equal to your limit of "+maxcount+" accounts. use `/unsubscribe` to remove these accounts.");
 				return;
 			}
 
@@ -283,12 +279,12 @@ namespace Instagram_Reels_Bot.Modules
             {
 				//Possibly incorrect username:
 				Console.WriteLine("Get username failure: " + e);
-				await FollowupAsync("Error al obtener el ID de Instagram. ¿Es el nombre de usuario correcto?");
+				await FollowupAsync("Failed to get Instagram ID. Is the account name correct?");
 				return;
             }
             if (!await instagram.AccountIsPublic(IGID))
             {
-				await FollowupAsync("La cuenta parece privada y no puede ser visitada por el bot.");
+				await FollowupAsync("The account appears to be private and cannot be viewed by the bot.");
 				return;
 			}
 			//Subscribe:
@@ -297,14 +293,14 @@ namespace Instagram_Reels_Bot.Modules
 				await _subscriptions.SubscribeToAccount(IGID, Context.Channel.Id, Context.Guild.Id);
 			}catch(ArgumentException e) when (e.Message.Contains("Already subscribed"))
             {
-				await FollowupAsync("Ya estás suscrito a esta cuenta.");
+				await FollowupAsync("You are already subscribed to this account.");
 				return;
 			}
 			//Notify:
-			await Context.Channel.SendMessageAsync("Este canal se ha suscrito a " + username + " en Instagram por " + Context.User.Mention, allowedMentions: AllowedMentions.None);
-			await FollowupAsync("Correcto. Recibirás las actualizaciones en este canal cuando se ejecuten las actualizaciones cada cierto intervalo de tiempo.");
+			await Context.Channel.SendMessageAsync("This channel has been subscribed to " + username + " on Instagram by " + Context.User.Mention, allowedMentions: AllowedMentions.None);
+			await FollowupAsync("Success! You will receive new posts to this channel. They will not be instant and accounts are checked on a time interval.");
 		}
-		[SlashCommand("desuscribirse", "Eliminar suscripción de ciertos usuarios.", runMode: RunMode.Async)]
+		[SlashCommand("unsubscribe", "Unsubscribe to updates from selectable Instagram accounts.", runMode: RunMode.Async)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
 		[RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
 		[RequireContext(ContextType.Guild)]
@@ -313,7 +309,7 @@ namespace Instagram_Reels_Bot.Modules
 			//Ensure subscriptions are enabled:
 			if (!_subscriptions.ModuleEnabled)
 			{
-				await RespondAsync("Las suscripciones están deshabilitadas.", ephemeral: true);
+				await RespondAsync("Subscriptions module is currently disabled.", ephemeral: true);
 				return;
 			}
 
@@ -326,7 +322,7 @@ namespace Instagram_Reels_Bot.Modules
 			// Create Dropdown with channels:
 			var menuBuilder = new SelectMenuBuilder()
 				.WithCustomId("unsubscribe")
-				.WithPlaceholder("Selecciona la suscripción a eliminar.")
+				.WithPlaceholder("Select accounts to remove.")
 				.WithMinValues(0);
 
 			// Get IG account:
@@ -361,14 +357,14 @@ namespace Instagram_Reels_Bot.Modules
             // Check for subs:
             if (subs.Length < 1)
             {
-				await FollowupAsync("No hay suscripciones.");
+				await FollowupAsync("No accounts subscribed.");
 				return;
             }
 
 			// Make embed:
 			var embed = new EmbedBuilder();
-			embed.Title = "Desuscribirse";
-			embed.Description = "Selecciona desde el menú desplegable las cuentas de las que quieres desuscribirte.";
+			embed.Title = "Unsubscribe";
+			embed.Description = "Select accounts that you would like to unsubscribe from in the dropdown below.";
 			embed.WithColor(new Color(131, 58, 180));
 
 			// Set max count:
@@ -381,7 +377,7 @@ namespace Instagram_Reels_Bot.Modules
 			// Send message
 			await FollowupAsync(embed: embed.Build(), components: builder.Build());
 		}
-		[SlashCommand("desuscribirall", "Desuscribirse de todas las cuentas de Instagram.", runMode: RunMode.Async)]
+		[SlashCommand("unsubscribeall", "Unsubscribe from all Instagram accounts.", runMode: RunMode.Async)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
 		[RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
 		[RequireContext(ContextType.Guild)]
@@ -390,7 +386,7 @@ namespace Instagram_Reels_Bot.Modules
 			//Ensure subscriptions are enabled:
 			if (!_subscriptions.ModuleEnabled)
 			{
-				await RespondAsync("Las suscripciones están deshabilitadas.", ephemeral: true);
+				await RespondAsync("Subscriptions module is currently disabled.", ephemeral: true);
 				return;
 			}
 
@@ -419,21 +415,21 @@ namespace Instagram_Reels_Bot.Modules
 			}
             if (errorCount > 0)
             {
-				await FollowupAsync("Error al desuscribirse de " + errorCount + " cuenta(s).");
+				await FollowupAsync("Failed to unsubscribe " + errorCount + " account(s).");
             }
             else
             {
                 if (subs.Length == 0)
                 {
-					await FollowupAsync("No estás suscrito a ninguna cuenta.");
+					await FollowupAsync("This guild is not subscribed to any accounts.");
                 }
                 else
                 {
-					await FollowupAsync("Correcto. Se ha eliminado la suscripción para todas las cuentas.");
+					await FollowupAsync("Success! Unsubscribed from all accounts.");
 				}
 			}
 		}
-		[SlashCommand("suscripciones", "Lista de cuentas a las que estás suscrito.", runMode: RunMode.Async)]
+		[SlashCommand("subscribed", "List of accounts that the guild is subscribed to.", runMode: RunMode.Async)]
 		[RequireContext(ContextType.Guild)]
 		public async Task Subscribed()
 		{
@@ -455,7 +451,7 @@ namespace Instagram_Reels_Bot.Modules
 			//Ensure subscriptions are enabled:
 			if (!_subscriptions.ModuleEnabled)
 			{
-				await RespondAsync("Las suscripciones están deshabilitadas.", ephemeral: true);
+				await RespondAsync("Subscriptions module is currently disabled.", ephemeral: true);
 				return;
 			}
 
@@ -468,11 +464,11 @@ namespace Instagram_Reels_Bot.Modules
 			List<Embed> embeds = new List<Embed>();
 
 			var embed = new EmbedBuilder();
-			embed.Title = "Suscripciones";
+			embed.Title = "Guild Subscriptions";
 			embed.WithColor(new Color(131, 58, 180));
 
 			var subs = await _subscriptions.GuildSubscriptionsAsync(Context.Guild.Id);
-			embed.Description = subs.Count() + " de " + await _subscriptions.MaxSubscriptionsCountForGuildAsync(Context.Guild.Id) + " suscripciones usadas.\n**Cuentas de Instagram:**";
+			embed.Description = subs.Count() + " of " + await _subscriptions.MaxSubscriptionsCountForGuildAsync(Context.Guild.Id) + " subscribes used.\n**Instagram Accounts:**";
 
 			string accountOutput = "";
 			string channelOutput = "";
@@ -482,7 +478,7 @@ namespace Instagram_Reels_Bot.Modules
                 {
                     if (chan.GuildID.Equals(Context.Guild.Id.ToString()))
                     {
-						string chanMention = "No existe el canal.\n";
+						string chanMention = "Missing channel.\n";
                         try
                         {
 							chanMention = "<#"+Context.Guild.GetChannel(ulong.Parse(chan.ChannelID)).Id+">\n";
@@ -498,8 +494,8 @@ namespace Instagram_Reels_Bot.Modules
                         }
                         else
                         {
-							embed.AddField("Cuenta", accountOutput, true);
-							embed.AddField("Canal", channelOutput, true);
+							embed.AddField("Account", accountOutput, true);
+							embed.AddField("Channel", channelOutput, true);
 							embeds.Add(embed.Build());
 
 							//Restart new embed:
@@ -513,12 +509,12 @@ namespace Instagram_Reels_Bot.Modules
 			}
 			if (subs.Length == 0)
             {
-				embed.Description = "No estás suscrito a ninguna cuenta. Empieza usando el comando `/suscribirse`";
+				embed.Description = "No accounts followed. Get started by using `/subscribe`";
             }
             else
             {
-				embed.AddField("Cuenta", accountOutput, true);
-				embed.AddField("Canal", channelOutput, true);
+				embed.AddField("Account", accountOutput, true);
+				embed.AddField("Channel", channelOutput, true);
 			}
 			embeds.Add(embed.Build());
 			await FollowupAsync(embeds: embeds.ToArray());
