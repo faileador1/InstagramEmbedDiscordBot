@@ -51,11 +51,11 @@ namespace Instagram_Reels_Bot.Modules
             else
             {
                 // if user is not the person who executed the command
-                await RespondAsync("You are not allowed to delete that message.", ephemeral: true);
+                await RespondAsync("No tienes permiso para borrar ese mensaje.", ephemeral: true);
             }
         }
 
-        [ComponentInteraction("unsubscribe", runMode: RunMode.Async)]
+        [ComponentInteraction("unsub", runMode: RunMode.Async)]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
         [RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
@@ -85,7 +85,7 @@ namespace Instagram_Reels_Bot.Modules
                 }
                 catch (ArgumentException e) when (e.Message.Contains("Cannot find user."))
                 {
-                    await FollowupAsync("Error: You are not subscribed to that user.", ephemeral: true);
+                    await FollowupAsync("Error: no tienes sub a ese usuario.", ephemeral: true);
                     return;
                 }
 
@@ -98,7 +98,7 @@ namespace Instagram_Reels_Bot.Modules
                 }
                 catch
                 {
-                    username = "*unknown user*";
+                    username = "*usuario desconocido*";
                 }
 
                 try
@@ -107,7 +107,7 @@ namespace Instagram_Reels_Bot.Modules
                     var chan = Context.Guild.GetChannel(chanID) as SocketTextChannel;
 
                     // Notify:
-                    await chan.SendMessageAsync("This channel has been unsubscribed to " + username + " on Instagram by " + Context.User.Mention, allowedMentions: AllowedMentions.None);
+                    await chan.SendMessageAsync("Este canal no recibirá más subs de " + username + " en Instagram por " + Context.User.Mention, allowedMentions: AllowedMentions.None);
                 }
                 catch (Exception e)
                 {
@@ -115,7 +115,7 @@ namespace Instagram_Reels_Bot.Modules
                     // Failed to send message (chan might have been deleted).
                 }
             }
-            await FollowupAsync("Success! You will no longer receive new posts to the selected channel(s).", ephemeral: true);
+            await FollowupAsync("Correcto. Eliminada sub a los canales seleccionados.", ephemeral: true);
         }
     }
 }
