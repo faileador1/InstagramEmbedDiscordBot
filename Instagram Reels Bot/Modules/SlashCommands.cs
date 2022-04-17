@@ -102,7 +102,7 @@ namespace Instagram_Reels_Bot.Modules
 			}
 			
 		}
-		[SlashCommand("cuneta", "Gets information about an Instagram profile.", runMode: RunMode.Async)]
+		[SlashCommand("profile", "Gets information about an Instagram profile.", runMode: RunMode.Async)]
 		public async Task Profile([Summary("username", "The username of the Instagram account.")] string username)
         {
 			// Check whitelist:
@@ -225,7 +225,7 @@ namespace Instagram_Reels_Bot.Modules
 
 			await RespondAsync(embed: embed.Build(), ephemeral: true, components: component.Build());
 		}
-		[SlashCommand("sub", "Get updates when a user posts a new post on Instagram.", runMode: RunMode.Async)]
+		[SlashCommand("subscribe", "Get updates when a user posts a new post on Instagram.", runMode: RunMode.Async)]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		[RequireBotPermission(ChannelPermission.AttachFiles)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
@@ -300,7 +300,7 @@ namespace Instagram_Reels_Bot.Modules
 			await Context.Channel.SendMessageAsync("This channel has been subscribed to " + username + " on Instagram by " + Context.User.Mention, allowedMentions: AllowedMentions.None);
 			await FollowupAsync("Success! You will receive new posts to this channel. They will not be instant and accounts are checked on a time interval.");
 		}
-		[SlashCommand("unsub", "Unsubscribe to updates from selectable Instagram accounts.", runMode: RunMode.Async)]
+		[SlashCommand("unsubscribe", "Unsubscribe to updates from selectable Instagram accounts.", runMode: RunMode.Async)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
 		[RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
 		[RequireContext(ContextType.Guild)]
@@ -321,7 +321,7 @@ namespace Instagram_Reels_Bot.Modules
 
 			// Create Dropdown with channels:
 			var menuBuilder = new SelectMenuBuilder()
-				.WithCustomId("unsub")
+				.WithCustomId("unsubscribe")
 				.WithPlaceholder("Select accounts to remove.")
 				.WithMinValues(0);
 
@@ -363,7 +363,7 @@ namespace Instagram_Reels_Bot.Modules
 
 			// Make embed:
 			var embed = new EmbedBuilder();
-			embed.Title = "Unsub";
+			embed.Title = "Unsubscribe";
 			embed.Description = "Select accounts that you would like to unsubscribe from in the dropdown below.";
 			embed.WithColor(new Color(131, 58, 180));
 
@@ -377,7 +377,7 @@ namespace Instagram_Reels_Bot.Modules
 			// Send message
 			await FollowupAsync(embed: embed.Build(), components: builder.Build());
 		}
-		[SlashCommand("unsuball", "Unsubscribe from all Instagram accounts.", runMode: RunMode.Async)]
+		[SlashCommand("unsubscribeall", "Unsubscribe from all Instagram accounts.", runMode: RunMode.Async)]
 		[RequireUserPermission(GuildPermission.Administrator, Group = "UserPerm")]
 		[RequireRole("InstagramBotSubscribe", Group = "UserPerm")]
 		[RequireContext(ContextType.Guild)]
@@ -429,7 +429,7 @@ namespace Instagram_Reels_Bot.Modules
 				}
 			}
 		}
-		[SlashCommand("subs", "List of accounts that the guild is subscribed to.", runMode: RunMode.Async)]
+		[SlashCommand("subscribed", "List of accounts that the guild is subscribed to.", runMode: RunMode.Async)]
 		[RequireContext(ContextType.Guild)]
 		public async Task Subscribed()
 		{
